@@ -1,43 +1,43 @@
 class Solution:
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        nums.sort()
-        #print(nums)
-        res=[]
-        print(len(nums))
+        ''' use 2 pointer to find the answer in O(n^2) '''
         
-        for i in range(len(nums)):
-            if i>0 and nums[i]==nums[i-1]:
-                continue
-            l=i+1
-            r=len(nums)-1
-
-            while(l<r):
-                if l==i:
-                    l+=1
-                elif r==i:
-                    r-=1
-                elif(nums[l]+nums[r]==(0-nums[i])):
-                    res.append(sorted([nums[l],nums[r],nums[i]]))
-                    #print(nums[i])
-                    r-=1
-                    l+=1
-                    while(l<r and nums[l]==nums[l-1]):
-                        l+=1
-                    while(l<r and nums[r]==nums[r+1]):
-                        r-=1
-                elif(nums[l]+nums[r]>(0-nums[i])):
-                    
-                    while(l<r and nums[r]==nums[r-1]):
-                        r-=1                    
-                    r-=1
-                elif(nums[l]+nums[r]<(0-nums[i])):
-                    
-                    while(l<r and nums[l]==nums[l+1]):
-                        l+=1
-                    l+=1
-                else:
-                    print('hi')
+        res = []
+        nums.sort()
+        lenth = len(nums)
+        
+        # if lenth < 3, it's impossible to find the answer
+        if lenth<3:
+            return []
+        
+        # find the target and do 2 pointers
+        for i in range(lenth-2):
+            left = i+1
+            right = lenth-1
+            while(left < right):
                 
-        #s = set(tuple(a) for a in res)
-        #res = [list(b) for b in s]
+                # if left + right < target, we have to let left bigger
+                if nums[left]+nums[right] < -1*nums[i]:
+                    left+=1
+                    while left < right and (nums[left] == nums[left-1]):
+                        left+=1
+                
+                # if left + right > target, we have to let right smaller
+                elif nums[left]+nums[right] > -1*nums[i]:
+                    right-=1
+                    while right>left and(nums[right] == nums[right+1]):
+                        right-=1
+                
+                # find answer
+                else:
+                    res.append([nums[i],nums[left],nums[right]])
+                    left += 1
+                    while left < right and (nums[left] == nums[left-1]):
+                        left+=1
+                    right -= 1
+                    while right>left and(nums[right] == nums[right+1]):
+                        right-=1
+        
+        #use set to avoid redundancy
+        res = list(set(tuple(sorted(sub)) for sub in res))
         return res
